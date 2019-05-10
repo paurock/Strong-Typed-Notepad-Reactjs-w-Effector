@@ -4,7 +4,6 @@ import { AddNoteForm, NoteList } from './Notes';
 import { Button } from 'antd';
 import backButton from '../images/backButton.png';
  
-
 const PageTemplate = ({ children, history, location, name }) => (
 	<section className="main-container">
 	<h1 className="page-title">/{name}</h1>
