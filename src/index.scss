@@ -1,5 +1,5 @@
 @import '~antd/dist/antd.css';
-$max-width-main: 500px;
+$max-width-main: 320px;
 
 html, body {
 	width:100%;
@@ -21,13 +21,13 @@ code {
 	font-size: 1.1rem;
 	padding: 2vw;
 }
-.menu button {
+.menu button {	
 	font-size: 1.4rem;
 	font-weight: bold; 
-	color: rgb(255, 255, 255);
+	color: white;
 	text-align: left;
-	min-width: 95vw;
-	max-width: 60vw;
+	width:$max-width-main;
+	max-width: $max-width-main;
 	min-height: 70px;
 	padding: 2vh;
 	cursor: pointer;
@@ -35,33 +35,41 @@ code {
 span.back-button {
     display: inline-flex;
     justify-content: flex-end;
-	width: 95vw;	
+		width: 100%;		
 }
 span.back-button .ant-btn {
-	border:0;
-}
-span.back-button img {
-    height: 15vw;
-    position: absolute;
-	right: -3.3vw;
+	font-size:17px;
+	background-color: white;
+	color:gray;
+	border:1px solid #999;
+	height:50px;
+	width:100px;
 }
 
 span.close {
 	position: relative;
     float: right;
     color: white;
-    line-height: 3vw;
-    font-size: 5vw;
+    font-size: 17px;
     background-color: lightgrey;
-    border-radius: 5vw;
-    padding: 1.3vw 2vw 2.4vw 2vw;
-	right: 0vw;	 
+    border-radius: 10px;
+    padding: 0px 7px 0px 7px;
+		right: 0vw;	 
+		cursor: pointer;
 }
 button {
 	color: rgb(49, 49, 49);
-	max-width: 85px;
-	width: 85px;
+	color:white;
+	font-size:1.5rem;
+	max-width: 250px;
+	width: 150px;
+	height:70px;	
 	margin: 2vh 0 0 0;
+	border-radius:10px;
+	border:none;
+	background-color: #1890ff;
+	cursor: pointer;
+	
 }
 .note-buttons {
 	display: inline-flex;
@@ -70,6 +78,11 @@ button {
 }
 textarea {
 	max-width: $max-width-main;
+	width:99%;
+	font-size:20px;
+	padding:5px 0 0 5px;
+	color:rgb(150, 150, 150);
+	border-radius:10px;
 }
 
 form {
@@ -80,12 +93,11 @@ form {
 
 .note-text {
 	color: white;
-	padding: 0.1vh 0 0.7vh 1vw;
-	border-radius: 4vw;
+	padding: 5px 0 7px 10px;
+	border-radius: 10px;
 	background-color:#1890ff;
-	margin: 0vh 0 1vh 0;
-	padding:1vh 2vw 2vw 2vw;
-	font-size:0.9rem;
+	margin: 0vh 0 15px 0;
+	font-size:1.5rem;
 	white-space: pre-line;
 	cursor: pointer;
 }
