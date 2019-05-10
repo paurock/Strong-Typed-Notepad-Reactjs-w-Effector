@@ -1,0 +1,63 @@
+{
+	"routes": [
+		{
+			"name": "Home",
+			"path": "/",
+            "children": true, 
+            "topic": "", 
+            "id":1
+		},
+		{
+			"name": "Spiritual",
+			"path": "/spiritual/",
+            "children": true,
+            "topic": "Spiritual",
+            "root":"Home",
+            "id":2
+        },
+        {
+			"name": "Relationships",
+			"path": "/spiritual/relationships/",
+            "children": true,
+            "topic": "Spiritual",
+            
+            "id":3
+        },
+        {
+			"name": "Meditation",
+			"path": "/spiritual/meditation/",
+            "children": true,
+            "topic": "Spiritual",
+            "id":4
+        },
+        {
+			"name": "Creativity",
+			"path": "/spiritual/creativity/",
+            "children": true,
+            "topic": "Spiritual", 
+            "id":5
+        },
+		{
+			"name": "Material",
+			"path": "/material/",
+            "children": true,
+            "topic": "Material",
+            "root":"Home",
+            "id":6
+        },         
+        {
+			"name": "Work",
+			"path": "/material/work/",
+            "children": true, 
+            "topic": "Material",
+            "id":7
+		},
+		{
+			"name": "Education",
+			"path": "/material/education/",
+            "children": true,
+            "topic": "Material",
+            "id":8
+		}        
+    ]   
+}

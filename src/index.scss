@@ -1,0 +1,106 @@
+@import '~antd/dist/antd.css';
+$max-width-main: 500px;
+
+@media (max-width: 500px) {
+	span.back-button img {
+		width: 15vw;
+		height: 15vw;	  
+	}
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+		'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code {
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+.main-container {
+	width: 99%;
+	max-width: $max-width-main;
+	font-size: 1.1rem;
+	padding: 2vw;
+}
+.menu button {
+	font-size: 1.4rem;
+	font-weight: bold; 
+	color: rgb(255, 255, 255);
+	text-align: left;
+	min-width: 95vw;
+	max-width: 60vw;
+	min-height: 70px;
+	padding: 2vh;
+}
+span.back-button {
+    display: inline-flex;
+    justify-content: flex-end;
+	width: 95vw;	
+}
+span.back-button .ant-btn {
+	border:0;
+}
+span.back-button img {
+    width: 15vw;
+    height: 15vw;
+    position: relative;
+    right: -2.8vw;
+    top: -2vw;
+}
+
+span.close {
+	position: relative;
+    float: right;
+    color: white;
+    line-height: 3vw;
+    font-size: 5vw;
+    background-color: lightgrey;
+    border-radius: 5vw;
+    padding: 1.3vw 2vw 2.4vw 2vw;
+    right: 0vw;
+}
+button {
+	color: rgb(49, 49, 49);
+	max-width: 85px;
+	width: 85px;
+	margin: 2vh 0 0 0;
+}
+.note-buttons {
+	display: inline-flex;
+	width: 100%;
+	justify-content: space-between;
+}
+textarea {
+	max-width: $max-width-main;
+}
+
+form {
+	display: flex-inline;
+	justify-content: flex-start;
+	max-width: $max-width-main;
+}
+
+.note-text {
+	color: white;
+	padding: 0.1vh 0 0.7vh 1vw;
+	border-radius: 4vw;
+	background-color:#1890ff;
+	margin: 0vh 0 1vh 0;
+	padding:1vh 2vw 2vw 2vw;
+	font-size:0.9rem;
+	white-space: pre-line;
+}
+.timestamp {
+	font-size: 0.65rem;
+    display: flex;
+    justify-content: flex-end;
+}
+.page-title {
+}
+.ant-btn-primary {
+	
+}
