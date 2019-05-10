@@ -24,11 +24,11 @@ export const Home = ({ history, location, name = 'Home' }) => (
 	<PageTemplate history={history} location={location} name={name}>
 		<nav className="menu">
 			<NavLink to="/spiritual/">
-				<Button block type="primary" type="primary">Spiritual</Button>
+				<Button type="primary">Spiritual</Button>
 			</NavLink>
 			<br />
 			<NavLink to="/material/">
-				<Button block type="primary" type="primary">Material</Button>
+				<Button type="primary">Material</Button>
 			</NavLink>
 			<br />
 		</nav>

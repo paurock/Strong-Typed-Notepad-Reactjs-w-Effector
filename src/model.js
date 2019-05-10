@@ -1,5 +1,4 @@
-import { createStore, createEvent, createStoreObject } from 'effector';
-import * as effector from "effector";
+import { createStore, createEvent } from 'effector';
 
 ///Local Storage///
  
@@ -13,7 +12,7 @@ export const addNote = createEvent()
 export const editNote = createEvent()
 export const updateTechVars = createEvent() 
 export const onRemove = createEvent()
-
+///Effector store
 export const $input = createStore("")
     .on(getInputText, (state, msg) => msg) 
     .on(editNote, (state, noteObj) => noteObj.note)
