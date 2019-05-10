@@ -1,14 +1,9 @@
 @import '~antd/dist/antd.css';
 $max-width-main: 500px;
 
-@media (max-width: 500px) {
-	span.back-button img {
-		width: 15vw;
-		height: 15vw;	  
-	}
-}
-
-body {
+html, body {
+	width:100%;
+	height:100%;
 	margin: 0;
 	padding: 0;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
@@ -35,6 +30,7 @@ code {
 	max-width: 60vw;
 	min-height: 70px;
 	padding: 2vh;
+	cursor: pointer;
 }
 span.back-button {
     display: inline-flex;
@@ -45,11 +41,9 @@ span.back-button .ant-btn {
 	border:0;
 }
 span.back-button img {
-    width: 15vw;
     height: 15vw;
-    position: relative;
-    right: -2.8vw;
-    top: -2vw;
+    position: absolute;
+	right: -3.3vw;
 }
 
 span.close {
@@ -61,7 +55,7 @@ span.close {
     background-color: lightgrey;
     border-radius: 5vw;
     padding: 1.3vw 2vw 2.4vw 2vw;
-    right: 0vw;
+	right: 0vw;	 
 }
 button {
 	color: rgb(49, 49, 49);
@@ -93,6 +87,7 @@ form {
 	padding:1vh 2vw 2vw 2vw;
 	font-size:0.9rem;
 	white-space: pre-line;
+	cursor: pointer;
 }
 .timestamp {
 	font-size: 0.65rem;
