@@ -152,8 +152,8 @@ button {
 	color:white;
 	font-size:1.5rem;
 	max-width: 250px;
-	width: 150px;
-	height:70px;	
+	width: 100px;
+	height:50px;	
 	margin: 2vh 0 0 0;
 	border-radius:10px;
 	border:none;
@@ -200,12 +200,14 @@ form {
 .ReactModal__Content--after-open {
 	position:fixed !important;
 	top:0 !important;	
-	margin-top:150px;
-	margin-left:13px;
-	width: 220px;
+	margin-top:160px;
+	margin-left:-2px;
+	width: 250px;
 	height:70px;
 }
 .modalWindow {
+	font-weight:bold;
+	color:red;
 	display:flex;
 	justify-content: space-around;
 	align-items:center;
@@ -213,6 +215,7 @@ form {
 }
 .modalWindow button {
 	font-size:0.8rem;
+	margin:-10px -10px 10px 10px;
 width:50px;
 height:20px;
 align-self:flex-start;

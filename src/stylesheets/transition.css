@@ -1,0 +1,14 @@
+.modalWindow-enter {
+  opacity: 0;
+}
+.modalWindow-enter-active {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+.modalWindow-exit {
+  opacity: 1;
+}
+.modalWindow-exit-active {
+  opacity: 0;
+  transition: opacity 500ms;
+}

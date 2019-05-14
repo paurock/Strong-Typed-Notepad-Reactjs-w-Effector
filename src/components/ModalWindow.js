@@ -1,6 +1,7 @@
 import React from "react";
 import ReactModal from "react-modal";
 import { openModal } from "../model";
+import PropTypes from "prop-types";
 
 ReactModal.setAppElement("#root");
 
@@ -12,3 +13,7 @@ export const ModalWindow = ({ showModal }) => (
     </div>
   </ReactModal>
 );
+
+ModalWindow.propTypes = {
+  notesAll: PropTypes.bool
+};
