@@ -5,13 +5,13 @@ import { $input, addNote, $techVars, getInputText, openModal } from "../model";
 import PropTypes from "prop-types";
 import { Input, Button } from "antd";
 import { ModalWindow } from "./ModalWindow";
-import { CSSTransition } from "react-transition-group";
-import "../stylesheets/transition.css";
+
 const { TextArea } = Input;
 
 export const AddNoteForm = ({ name }) => {
   const input = useStore($input);
   const { noteUnderEdit, noteUnderEditText, showModal } = useStore($techVars);
+
   const handleChange = e => getInputText(e.target.value);
   const handleSubmit = e => {
     e.preventDefault();
@@ -31,16 +31,12 @@ export const AddNoteForm = ({ name }) => {
         handleSubmit={e => handleSubmit(e)}
         handleChange={e => handleChange(e)}
       />
-      <CSSTransition
-        in={showModal}
-        unmountOnExit
-        timeout={1000}
-        classNames="modalWindow"
-      >
-        <ModalWindow showModal={showModal} />
-      </CSSTransition>
+      <ModalWindow showModal={showModal} />
     </>
   );
+};
+AddNoteForm.propTypes = {
+  name: PropTypes.string
 };
 
 const FormItem = ({
