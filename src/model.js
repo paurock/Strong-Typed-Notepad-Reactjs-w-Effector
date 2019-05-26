@@ -19,6 +19,7 @@ export const $input = createStore("")
   .on(getInputText, (state, msg) => msg)
   .on(editNote, (state, noteObj) => noteObj.note)
   .reset(addNote);
+
 export const $notes = createStore(initialState())
   .on(editNote, (oldState, noteObj) => [
     ...oldState.filter(note => note.id !== noteObj.id)
@@ -34,7 +35,11 @@ export const $techVars = createStore({
   noteUnderEditText: "",
   showModal: false
 })
-  .on(updateTechVars, (oldState, techObj) => techObj)
+  .on(updateTechVars, (oldState, { noteUnderEdit, noteUnderEditText }) => ({
+    ...oldState,
+    noteUnderEdit,
+    noteUnderEditText
+  }))
   .on(openModal, (oldState, showModal) => ({ ...oldState, showModal }))
   .reset(addNote)
   .reset(onRemove);

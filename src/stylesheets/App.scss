@@ -17,7 +17,6 @@ h5 {
 	width: 99%;
 	max-width: $max-width-main;
 	font-size: 1.1rem;
-	margin-left:20px;
 }
 .menu button {	
 	font-size: 1.4rem;
@@ -196,27 +195,4 @@ form {
 	font-size: 0.65rem;
     display: flex;
     justify-content: flex-end;
-}
-.ReactModal__Content--after-open {
-	position:fixed !important;
-	top:0 !important;	
-	margin-top:160px;
-	margin-left:-2px;
-	width: 250px;
-	height:70px;
-}
-.modalWindow {
-	font-weight:bold;
-	color:red;
-	display:flex;
-	justify-content: space-around;
-	align-items:center;
-	height:70px;
-}
-.modalWindow button {
-	font-size:0.8rem;
-	margin:-10px -10px 10px 10px;
-width:50px;
-height:20px;
-align-self:flex-start;
 }
