@@ -13,6 +13,7 @@ import { Ddmmyyyy } from "./Ddmmyyyy";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../stylesheets/transitionGroup.css";
 
+// Note list Component
 export const NoteList = ({ name }) => {
   const notesAll = useStore($notes);
   useEffect(() => {

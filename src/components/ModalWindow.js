@@ -6,16 +6,17 @@ import "../stylesheets/modalWindow.css";
 
 ReactModal.setAppElement("#root");
 
-export const ModalWindow = ({ showModal, contentModal }) => (
+export const ModalWindow = ({ showModal, contentModal, closeBtn = true }) => (
   <ReactModal isOpen={showModal} contentLabel="Alert" closeTimeoutMS={500}>
     <div className="modalWindow">
       <p>{contentModal}</p>
-      <button onClick={() => openModal(false)}>Close</button>
+      {closeBtn && <button onClick={() => openModal(false)}>Close</button>}
     </div>
   </ReactModal>
 );
 
 ModalWindow.propTypes = {
   showModal: PropTypes.bool,
-  contentModal: PropTypes.string
+  contentModal: PropTypes.string,
+  closeBtn: PropTypes.bool
 };

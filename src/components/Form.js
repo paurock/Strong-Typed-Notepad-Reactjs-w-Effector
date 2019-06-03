@@ -2,6 +2,7 @@ import React from "react";
 import { useStore } from "effector-react";
 import {
   $input,
+  $preloader,
   addNote,
   $techVars,
   getInputText,
@@ -15,17 +16,21 @@ import { ModalWindow } from "./ModalWindow";
 
 const { TextArea } = Input;
 
+// Form component Parent
 export const AddNoteForm = ({ name }) => {
   const input = useStore($input);
-  const { noteUnderEdit, noteUnderEditId, showModal } = useStore($techVars);
+  const { loading } = useStore($preloader);
+  const { noteUnderEdit, noteUnderEditId, showModal, noteNumber } = useStore(
+    $techVars
+  );
 
   const handleChange = e => getInputText(e.target.value);
 
   const handleSubmit = e => {
     e.preventDefault();
     if (input !== "") {
-      addNote({ note: input, category: name });
       noteUnderEditId && deleteNote(noteUnderEditId);
+      addNote({ note: input, category: name, noteNumber: noteNumber });
     } else {
       openModal(true);
     }
@@ -43,6 +48,11 @@ export const AddNoteForm = ({ name }) => {
         showModal={showModal}
         contentModal="Try to add something please!"
       />
+      <ModalWindow
+        showModal={loading}
+        contentModal="Please wait..."
+        closeBtn={false}
+      />
     </>
   );
 };
@@ -50,6 +60,7 @@ AddNoteForm.propTypes = {
   name: PropTypes.string
 };
 
+// Form component Child
 const FormItem = ({
   input,
   handleSubmit = f => f,
