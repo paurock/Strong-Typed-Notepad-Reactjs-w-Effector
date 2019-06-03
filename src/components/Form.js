@@ -1,7 +1,14 @@
 import React from "react";
 import { useStore } from "effector-react";
-import { v4 } from "uuid";
-import { $input, addNote, $techVars, getInputText, openModal } from "../model";
+import {
+  $input,
+  addNote,
+  $techVars,
+  getInputText,
+  openModal,
+  deleteNote,
+  onCancel
+} from "../model";
 import PropTypes from "prop-types";
 import { Input, Button } from "antd";
 import { ModalWindow } from "./ModalWindow";
@@ -10,28 +17,32 @@ const { TextArea } = Input;
 
 export const AddNoteForm = ({ name }) => {
   const input = useStore($input);
-  const { noteUnderEdit, noteUnderEditText, showModal } = useStore($techVars);
+  const { noteUnderEdit, noteUnderEditId, showModal } = useStore($techVars);
 
   const handleChange = e => getInputText(e.target.value);
+
   const handleSubmit = e => {
     e.preventDefault();
-    input !== ""
-      ? addNote({ note: input, id: v4(), category: name })
-      : openModal(true);
+    if (input !== "") {
+      addNote({ note: input, category: name });
+      noteUnderEditId && deleteNote(noteUnderEditId);
+    } else {
+      openModal(true);
+    }
   };
-  const onCancel = () => {
-    addNote({ note: noteUnderEditText, id: v4(), category: name });
-  };
+
   return (
     <>
       <FormItem
         input={input}
         noteUnderEdit={noteUnderEdit}
-        onCancel={onCancel}
         handleSubmit={e => handleSubmit(e)}
         handleChange={e => handleChange(e)}
       />
-      <ModalWindow showModal={showModal} />
+      <ModalWindow
+        showModal={showModal}
+        contentModal="Try to add something please!"
+      />
     </>
   );
 };
@@ -43,8 +54,7 @@ const FormItem = ({
   input,
   handleSubmit = f => f,
   handleChange = f => f,
-  noteUnderEdit,
-  onCancel = f => f
+  noteUnderEdit
 }) => (
   <div className="form">
     <form onSubmit={handleSubmit}>
@@ -60,7 +70,7 @@ const FormItem = ({
         </Button>
         {noteUnderEdit && (
           <>
-            <Button onClick={onCancel} block>
+            <Button onClick={() => onCancel()} block>
               Cancel
             </Button>
           </>
@@ -74,5 +84,6 @@ FormItem.propTypes = {
   handleSubmit: PropTypes.func,
   handleChange: PropTypes.func,
   onCancel: PropTypes.func,
+  onSave: PropTypes.func,
   noteUnderEdit: PropTypes.bool
 };

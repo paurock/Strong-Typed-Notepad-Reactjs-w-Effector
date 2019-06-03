@@ -1,49 +1,76 @@
-import { createStore, createEvent } from "effector";
+import { createStore, createEvent, createEffect } from "effector";
+import firebase from "./configFB";
 
-///Local Storage///
+const db = firebase.firestore();
 
-const readLS = () => localStorage.getItem("effector-notes"); //Fn that read data with your label from LS
-const writeLS = newItem =>
-  localStorage.setItem("effector-notes", JSON.stringify(newItem)); //Fn that write your object in LS
-const dataLS = readLS();
-const initialState = () => JSON.parse(dataLS !== null ? dataLS : "[]");
+const notes = () => [];
+const pushDocIntoArray = (arr, obj, id) => arr.push({ ...obj, id });
 
+//Reading Data from Firebase
+const getArrFromFirebase = (initArr, collectionName) =>
+  db
+    .collection(collectionName)
+    .get()
+    .then(snapshot =>
+      snapshot.forEach(doc => pushDocIntoArray(initArr, doc.data(), doc.id))
+    )
+    .then(() => initArr)
+    .catch(err => console.log(err));
+
+export const getNotes = createEffect("get notes").use(() =>
+  getArrFromFirebase(notes(), "$notes").then(res => res)
+);
+export const addNote = createEffect("add note").use(obj =>
+  db
+    .collection("$notes")
+    .add(obj)
+    .catch(err => console.log(err))
+);
+
+export const deleteNote = createEffect("delete note").use(id =>
+  db
+    .collection("$notes")
+    .doc(id)
+    .delete()
+);
+
+// notesFB.then(res=>console.log(res))
 export const getInputText = createEvent();
-export const addNote = createEvent();
-export const editNote = createEvent();
 export const updateTechVars = createEvent();
-export const onRemove = createEvent();
 export const openModal = createEvent();
-///Effector store
+export const editNote = createEvent();
+export const onCancel = createEvent();
+
 export const $input = createStore("")
   .on(getInputText, (state, msg) => msg)
   .on(editNote, (state, noteObj) => noteObj.note)
-  .reset(addNote);
+  .reset(addNote)
+  .reset(onCancel);
 
-export const $notes = createStore(initialState())
-  .on(editNote, (oldState, noteObj) => [
-    ...oldState.filter(note => note.id !== noteObj.id)
-  ])
-  .on(addNote, (oldState, noteObj) => [
-    ...oldState.filter(item => item.note !== noteObj.note),
-    noteObj
-  ])
-  .on(onRemove, (oldState, id) => [...oldState.filter(item => item.id !== id)]);
+export const $notes = createStore([])
+  .on(getNotes.done, (state, { result }) => result)
+  .on(addNote.done, (state, { result }) => state);
 
 export const $techVars = createStore({
   noteUnderEdit: false,
   noteUnderEditText: "",
-  showModal: false
+  showModal: false,
+  loader: true
 })
-  .on(updateTechVars, (oldState, { noteUnderEdit, noteUnderEditText }) => ({
-    ...oldState,
-    noteUnderEdit,
-    noteUnderEditText
-  }))
+  .on(
+    updateTechVars,
+    (oldState, { noteUnderEdit, noteUnderEditText, noteUnderEditId }) => ({
+      ...oldState,
+      noteUnderEdit,
+      noteUnderEditText,
+      noteUnderEditId
+    })
+  )
   .on(openModal, (oldState, showModal) => ({ ...oldState, showModal }))
-  .reset(addNote)
-  .reset(onRemove);
+  .reset(deleteNote)
+  .reset(onCancel);
 
-$notes.watch(writeLS);
-
-//localStorage.clear()
+getNotes.fail.watch(console.log);
+getNotes.done.watch(console.log);
+addNote.done.watch(getNotes);
+deleteNote.done.watch(getNotes);
