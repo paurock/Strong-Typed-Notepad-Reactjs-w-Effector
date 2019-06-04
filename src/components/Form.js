@@ -3,6 +3,7 @@ import { useStore } from "effector-react";
 import {
   $input,
   $preloader,
+  $biggerNoteNumber,
   addNote,
   $techVars,
   getInputText,
@@ -16,13 +17,13 @@ import { ModalWindow } from "./ModalWindow";
 
 const { TextArea } = Input;
 
-// Form component Parent
+// Form component Parent //
+
 export const AddNoteForm = ({ name }) => {
   const input = useStore($input);
+  const biggerNoteNumber = useStore($biggerNoteNumber);
   const { loading } = useStore($preloader);
-  const { noteUnderEdit, noteUnderEditId, showModal, noteNumber } = useStore(
-    $techVars
-  );
+  const { noteUnderEdit, noteUnderEditId, showModal } = useStore($techVars);
 
   const handleChange = e => getInputText(e.target.value);
 
@@ -30,7 +31,11 @@ export const AddNoteForm = ({ name }) => {
     e.preventDefault();
     if (input !== "") {
       noteUnderEditId && deleteNote(noteUnderEditId);
-      addNote({ note: input, category: name, noteNumber: noteNumber });
+      addNote({
+        note: input,
+        category: name,
+        noteNumber: biggerNoteNumber + 1
+      });
     } else {
       openModal(true);
     }
