@@ -1,14 +1,17 @@
 import { createStore, createEvent, createEffect } from "effector";
 import firebase from "./configFB";
-
+import "firebase/auth";
+//Auth
+const auth = firebase.auth();
+//DB
 const db = firebase.firestore();
-
+//Notes 
 const notes = () => [];
 
 const pushDocIntoArray = (arr, obj, id, noteNumber) =>
   arr.push({ ...obj, id, noteNumber });
 
-//Reading Data from Firebase//
+//Reading Data from Firebase server//
 
 const getArrFromFirebase = (initArr, collectionName) =>
   db
@@ -22,7 +25,7 @@ const getArrFromFirebase = (initArr, collectionName) =>
     )
     .then(() => initArr)
     .catch(err => console.log(err));
-
+//Effects for handeling server data
 export const getNotes = createEffect("get notes").use(() =>
   getArrFromFirebase(notes(), "$notes").then(res => res)
 );
@@ -32,7 +35,6 @@ export const addNote = createEffect("add note").use(obj =>
     .add(obj)
     .catch(err => console.log(err))
 );
-
 export const deleteNote = createEffect("delete note").use(id =>
   db
     .collection("$notes")
@@ -87,6 +89,10 @@ export const $techVars = createStore({
 export const $preloader = createStore({ loading: true })
   .on(getNotes.done, (store, params) => ({ ...store, loading: false }))
   .reset(getNotes);
+
+export const $modals = createStore({})
+
+
 
 //Watchers
 

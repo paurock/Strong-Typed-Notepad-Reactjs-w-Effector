@@ -17,6 +17,6 @@ export const ModalWindow = ({ showModal, contentModal, closeBtn = true }) => (
 
 ModalWindow.propTypes = {
   showModal: PropTypes.bool,
-  contentModal: PropTypes.string,
+  contentModal: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   closeBtn: PropTypes.bool
 };

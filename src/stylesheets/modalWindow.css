@@ -18,7 +18,7 @@
 .modalWindow button {
   font-size: 0.8rem;
   margin: -10px -30px 10px 10px;
-  width: 50px;
+  width: 100px;
   height: 20px;
   align-self: flex-start;
 }

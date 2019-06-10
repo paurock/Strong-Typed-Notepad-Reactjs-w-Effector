@@ -12,10 +12,7 @@ import {
   onCancel
 } from "../model";
 import PropTypes from "prop-types";
-import { Input, Button } from "antd";
 import { ModalWindow } from "./ModalWindow";
-
-const { TextArea } = Input;
 
 // Form component Parent //
 
@@ -24,8 +21,6 @@ export const AddNoteForm = ({ name }) => {
   const biggerNoteNumber = useStore($biggerNoteNumber);
   const { loading } = useStore($preloader);
   const { noteUnderEdit, noteUnderEditId, showModal } = useStore($techVars);
-
-  const handleChange = e => getInputText(e.target.value);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -74,21 +69,17 @@ const FormItem = ({
 }) => (
   <div className="form">
     <form onSubmit={handleSubmit}>
-      <TextArea
+      <textarea
         rows={6}
         value={input}
         onKeyDown={e => e.keyCode === 13 && e.ctrlKey && handleSubmit(e)}
-        onChange={e => handleChange(e)}
+        onChange={e => getInputText(e.target.value)}
       />
       <div className="note-buttons">
-        <Button type="primary" onClick={handleSubmit} block>
-          {noteUnderEdit ? "Save" : "Add"}
-        </Button>
+        <button onClick={handleSubmit}>{noteUnderEdit ? "Save" : "Add"}</button>
         {noteUnderEdit && (
           <>
-            <Button onClick={() => onCancel()} block>
-              Cancel
-            </Button>
+            <button onClick={() => onCancel()}>Cancel</button>
           </>
         )}
       </div>
