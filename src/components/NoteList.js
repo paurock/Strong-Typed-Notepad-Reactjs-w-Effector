@@ -4,20 +4,27 @@ import { v4 } from "uuid";
 import PropTypes from "prop-types";
 import {
   $notes,
-  updateTechVars,
+  updateNoteUnderEdition,
   deleteNote,
   editNote,
-  getNotes
+  getNotes,
+  onRefresh
 } from "../model";
 import { Ddmmyyyy } from "./Ddmmyyyy";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../stylesheets/transitionGroup.css";
+import { auth } from "../model";
 
 // Note list Component
 export const NoteList = ({ name }) => {
   const notesAll = useStore($notes);
+  const user = auth.currentUser;
+
   useEffect(() => {
-    getNotes();
+    auth.onAuthStateChanged(user => {
+      getNotes();
+      onRefresh();
+    });
   }, []);
 
   const filteredNotesByCategory = notesAll.filter(
@@ -25,7 +32,7 @@ export const NoteList = ({ name }) => {
   );
 
   const handleEditNote = noteObj => {
-    updateTechVars({
+    updateNoteUnderEdition({
       noteUnderEdit: true,
       noteUnderEditText: noteObj.note,
       noteUnderEditId: noteObj.id
@@ -33,7 +40,7 @@ export const NoteList = ({ name }) => {
     editNote(noteObj);
   };
 
-  return (
+  return user ? (
     <>
       {filteredNotesByCategory.length !== 0 ? (
         <TransitionGroup>
@@ -65,13 +72,15 @@ export const NoteList = ({ name }) => {
         <p>Please add a note!</p>
       )}
     </>
+  ) : (
+    <p>Please sign in or sign up to add and read notes!</p>
   );
 };
 NoteList.propTypes = {
-  notesAll: PropTypes.array,
+  notesAll: PropTypes.array.isRequired,
   filteredNotesByCategory: PropTypes.array,
-  name: PropTypes.string,
-  updateTechVars: PropTypes.func,
+  name: PropTypes.string.isRequired,
+  updateNoteUnderEdition: PropTypes.func,
   editNote: PropTypes.func,
   handleEditNote: PropTypes.func,
   onRemove: PropTypes.func

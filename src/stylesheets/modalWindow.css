@@ -17,12 +17,23 @@
 }
 .modalWindow button {
   font-size: 0.8rem;
-  margin: -10px -30px 10px 10px;
-  width: 50px;
+  margin: -5px -5px 0px 0px;
+  max-width: 150px;
   height: 20px;
   align-self: flex-start;
 }
-
+.modalWindow button.closeModal {
+  margin: -5px -15px 0px 0px;
+  width: 50px;
+}
+.modalWindow div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+}
 .ReactModal__Overlay {
   opacity: 0;
   transition: opacity 300ms ease-in-out;

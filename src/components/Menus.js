@@ -2,18 +2,19 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { AddNoteForm } from "./Form";
 import { NoteList } from "./NoteList";
-import { Button } from "antd";
+import { AuthLinks } from "./Auth";
 
 const PageTemplate = ({ children, history, location, name }) => (
   <section className="main-container">
+    <AuthLinks />
     <h1 className="page-title">/{name}</h1>
     {children}
     <span className="back-button">
       {location.pathname === "/" ? null : (
         <>
-          <Button className="back-button">
+          <button className="back-button">
             <BackBtn history={history} location={location} />
-          </Button>
+          </button>
         </>
       )}
     </span>
@@ -30,11 +31,11 @@ export const Home = ({ history, location, name = "Home" }) => (
   <PageTemplate history={history} location={location} name={name}>
     <nav className="menu">
       <NavLink to="/spiritual/">
-        <Button type="primary">Spiritual</Button>
+        <button>Spiritual</button>
       </NavLink>
       <br />
       <NavLink to="/material/">
-        <Button type="primary">Material</Button>
+        <button>Material</button>
       </NavLink>
       <br />
     </nav>
@@ -46,21 +47,15 @@ export const Spiritual = ({ history, location, name = "Spiritual" }) => (
   <PageTemplate history={history} location={location} name={name}>
     <nav className="menu">
       <NavLink to="/spiritual/meditation">
-        <Button block type="primary">
-          Meditation
-        </Button>
+        <button>Meditation</button>
       </NavLink>
       <br />
       <NavLink to="/spiritual/creativity">
-        <Button block type="primary">
-          Creativity
-        </Button>
+        <button>Creativity</button>
       </NavLink>
       <br />
       <NavLink to="/spiritual/relationships">
-        <Button block type="primary">
-          Relationships
-        </Button>
+        <button>Relationships</button>
       </NavLink>
     </nav>
   </PageTemplate>
@@ -92,15 +87,11 @@ export const Material = ({ history, location, name = "Material" }) => (
   <PageTemplate history={history} location={location} name={name}>
     <nav className="menu">
       <NavLink to="/material/education">
-        <Button block type="primary">
-          Education
-        </Button>
+        <button>Education</button>
       </NavLink>
       <br />
       <NavLink to="/material/work">
-        <Button block type="primary">
-          Work
-        </Button>
+        <button>Work</button>
       </NavLink>
     </nav>
   </PageTemplate>

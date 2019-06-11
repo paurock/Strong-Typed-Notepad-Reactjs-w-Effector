@@ -2,93 +2,90 @@ import React from "react";
 import { useStore } from "effector-react";
 import {
   $input,
+  $modals,
   $preloader,
   $biggerNoteNumber,
   addNote,
-  $techVars,
+  $noteUnderEdition,
   getInputText,
-  openModal,
+  openModalEmptyField,
   deleteNote,
   onCancel
 } from "../model";
 import PropTypes from "prop-types";
-import { Input, Button } from "antd";
 import { ModalWindow } from "./ModalWindow";
-
-const { TextArea } = Input;
+import { auth } from "../model";
 
 // Form component Parent //
 
 export const AddNoteForm = ({ name }) => {
+  const user = auth.currentUser;
   const input = useStore($input);
   const biggerNoteNumber = useStore($biggerNoteNumber);
   const { loading } = useStore($preloader);
-  const { noteUnderEdit, noteUnderEditId, showModal } = useStore($techVars);
+  const { noteUnderEdit, noteUnderEditId } = useStore($noteUnderEdition);
+  const { showModalEmptyInput } = useStore($modals);
 
-  const handleChange = e => getInputText(e.target.value);
-
+  //submit a note
   const handleSubmit = e => {
     e.preventDefault();
     if (input !== "") {
+      //delete a note if it's under edition
       noteUnderEditId && deleteNote(noteUnderEditId);
+      //add a note
       addNote({
         note: input,
         category: name,
-        noteNumber: biggerNoteNumber + 1
+        noteNumber: biggerNoteNumber === -Infinity ? 0 : biggerNoteNumber + 1
       });
     } else {
-      openModal(true);
+      //Alert to fill textarea if empty
+      openModalEmptyField(true);
     }
   };
 
   return (
-    <>
-      <FormItem
-        input={input}
-        noteUnderEdit={noteUnderEdit}
-        handleSubmit={e => handleSubmit(e)}
-        handleChange={e => handleChange(e)}
-      />
-      <ModalWindow
-        showModal={showModal}
-        contentModal="Try to add something please!"
-      />
-      <ModalWindow
-        showModal={loading}
-        contentModal="Please wait..."
-        closeBtn={false}
-      />
-    </>
+    user && (
+      <>
+        <FormItem
+          input={input}
+          noteUnderEdit={noteUnderEdit}
+          handleSubmit={e => handleSubmit(e)}
+          handleChange={e => handleChange(e)}
+        />
+        <ModalWindow
+          showModal={showModalEmptyInput}
+          contentModal="Try to add something please!"
+          closeModal={openModalEmptyField}
+        />
+        <ModalWindow
+          showModal={loading}
+          contentModal="Please wait..."
+          closeBtn={false}
+        />
+      </>
+    )
   );
 };
 AddNoteForm.propTypes = {
-  name: PropTypes.string
+  name: PropTypes.string.isRequired
 };
 
 // Form component Child
-const FormItem = ({
-  input,
-  handleSubmit = f => f,
-  handleChange = f => f,
-  noteUnderEdit
-}) => (
+const FormItem = ({ input, handleSubmit = f => f, noteUnderEdit }) => (
   <div className="form">
     <form onSubmit={handleSubmit}>
-      <TextArea
+      <textarea
         rows={6}
         value={input}
         onKeyDown={e => e.keyCode === 13 && e.ctrlKey && handleSubmit(e)}
-        onChange={e => handleChange(e)}
+        onChange={e => getInputText(e.target.value)}
       />
       <div className="note-buttons">
-        <Button type="primary" onClick={handleSubmit} block>
-          {noteUnderEdit ? "Save" : "Add"}
-        </Button>
+        <button onClick={handleSubmit}>{noteUnderEdit ? "Save" : "Add"}</button>
         {noteUnderEdit && (
           <>
-            <Button onClick={() => onCancel()} block>
-              Cancel
-            </Button>
+            <button onClick={() => onCancel()}>Cancel</button>
           </>
         )}
       </div>
