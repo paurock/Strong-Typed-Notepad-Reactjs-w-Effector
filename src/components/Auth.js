@@ -29,7 +29,7 @@ export const AuthLinks = () => {
     if (toggle === "signup") {
       auth
         .createUserWithEmailAndPassword(signupData.email, signupData.password)
-        .then(() => {
+        .then(cred => {
           //authentificate with signed up state
           auth.signInWithEmailAndPassword(
             signupData.email,
@@ -38,11 +38,11 @@ export const AuthLinks = () => {
           alert("You successfully signed up and signed in!");
           openModalAuth(false); //close modal
         })
-        .catch(err => alert(err));
+        .catch(err => alert(err.message));
     } else {
       auth
         .signInWithEmailAndPassword(signinData.email, signinData.password)
-        .then(() => {
+        .then(cred => {
           setSigninData({ email: "", password: "" }); //clear signin state
           openModalAuth(false);
         })

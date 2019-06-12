@@ -3,42 +3,51 @@ import firebase from "./configFB";
 import "firebase/auth";
 
 export const auth = firebase.auth();
-
 //DB
 const db = firebase.firestore();
 //Notes
 const notes = () => [];
 
-const pushDocIntoArray = (arr, obj, id, noteNumber) =>
-  arr.push({ ...obj, id, noteNumber });
+const pushDocIntoArray = (arr, obj, noteNumber, id) =>
+  arr.push({ ...obj, noteNumber, id });
 
-//Reading Data from Firebase server//
+const getDocRef = () => {
+  const user = auth.currentUser; // return object if signedin and null if not
+  return user
+    ? db //Reading Data from Firebase server//
+        .collection("userData")
+        .doc(user.uid)
+        .collection("notes")
+    : db
+        .collection("userData")
+        .doc()
+        .collection("notes");
+};
 
-const getArrFromFirebase = (initArr, collectionName) =>
-  db
-    .collection(collectionName)
+const getArrFromFirebase = initArr =>
+  getDocRef()
     .orderBy("noteNumber", "asc")
     .get()
     .then(snapshot =>
       snapshot.forEach(doc =>
-        pushDocIntoArray(initArr, doc.data(), doc.id, doc.data().noteNumber)
+        pushDocIntoArray(initArr, doc.data(), doc.data().noteNumber, doc.id)
       )
     )
     .then(() => initArr)
     .catch(err => console.log(err));
+
 //Effects for handeling server data
-export const getNotes = createEffect("get notes").use(() =>
-  getArrFromFirebase(notes(), "notes").then(res => res)
-);
 export const addNote = createEffect("add note").use(obj =>
-  db
-    .collection("notes")
-    .add(obj)
-    .catch(err => console.log(err))
+  getDocRef()
+    .doc()
+    .set(obj)
+    .catch(err => console.error("Error writing document", err))
+);
+export const getNotes = createEffect("get notes").use(() =>
+  getArrFromFirebase(notes()).then(res => (res ? res : []))
 );
 export const deleteNote = createEffect("delete note").use(id =>
-  db
-    .collection("notes")
+  getDocRef()
     .doc(id)
     .delete()
 );
@@ -65,7 +74,7 @@ export const $input = createStore("")
   .reset(onCancel);
 
 export const $notes = createStore([])
-  .on(getNotes.done, (state, { result }) => result)
+  .on(getNotes.done, (state, { result }) => result || [])
   .on(addNote.done, (state, { result }) => state)
   .on(editNote, (state, noteObj) =>
     state.filter(item => item.id !== noteObj.id)
@@ -112,3 +121,4 @@ export const $modals = createStore({
 addNote.done.watch(getNotes);
 deleteNote.done.watch(getNotes);
 onCancel.watch(getNotes);
+//$modals.watch(user);

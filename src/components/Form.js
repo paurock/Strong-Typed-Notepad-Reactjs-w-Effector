@@ -51,7 +51,7 @@ export const AddNoteForm = ({ name }) => {
           input={input}
           noteUnderEdit={noteUnderEdit}
           handleSubmit={e => handleSubmit(e)}
-          handleChange={e => handleChange(e)}
+          //handleChange={e => handleChange(e)}
         />
         <ModalWindow
           showModal={showModalEmptyInput}
