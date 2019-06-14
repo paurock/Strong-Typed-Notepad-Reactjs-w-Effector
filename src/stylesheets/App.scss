@@ -20,7 +20,10 @@ h5 {
 	padding: 2vw;
 }
 .main-container p {
-	color:gray; 
+	color: gray;
+    padding: 10px;
+    border-radius: 5px;
+    background: lavenderblush;
 }
 .menu button {	
 	font-size: 1.4rem;
@@ -86,10 +89,11 @@ form.signin, form.signup {
 }
 form.signin button.signin, form.signup button.signup { 
 	margin: 0 auto;
-	text-decoration:none;
-	color:lightgray;
-	cursor:pointer;
-	background: none; 
+	text-decoration: none;
+	color: dodgerblue;
+	cursor: pointer;
+	background: none;
+	font-weight: 600; 
 }
 
 input {

@@ -55,7 +55,8 @@ export const deleteNote = createEffect("delete note").use(id =>
 // Events
 export const getInputText = createEvent();
 export const updateNoteUnderEdition = createEvent();
-export const openModalEmptyField = createEvent();
+export const openModalAlert = createEvent();
+export const setModalAlertContent = createEvent();
 export const openModalAuth = createEvent();
 export const editNote = createEvent();
 export const onCancel = createEvent();
@@ -102,12 +103,17 @@ export const $preloader = createStore({ loading: true })
   .reset(getNotes);
 
 export const $modals = createStore({
-  showModalEmptyInput: false,
-  isShowModalAuth: false
+  isShowModalAlert: false,
+  isShowModalAuth: false,
+  modalContent: ""
 })
-  .on(openModalEmptyField, (oldState, showModalEmptyInput) => ({
+  .on(openModalAlert, (oldState, isShowModalAlert) => ({
     ...oldState,
-    showModalEmptyInput
+    isShowModalAlert
+  }))
+  .on(setModalAlertContent, (oldState, modalContent) => ({
+    ...oldState,
+    modalContent
   }))
   .on(openModalAuth, (oldState, isShowModalAuth) => ({
     ...oldState,

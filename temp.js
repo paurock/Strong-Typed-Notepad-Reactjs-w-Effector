@@ -5,14 +5,6 @@ const writeLS = newItem =>
 const notesLS = readLS();
 const initialState = data => (data !== null ? data : "[]"); */
 
-useEffect(() => {
-  getNotes();
-  auth.onAuthStateChanged(() => {
-    getNotes();
-    onRefresh();
-  });
-}, []);
-
 import * as firebase from "firebase";
 
 // Your web app's Firebase configuration

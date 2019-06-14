@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useStore } from "effector-react";
-import { ModalWindow } from "./ModalWindow";
-import { $modals, openModalAuth, auth } from "../model";
+import { ModalWindow, alertModal } from "./ModalWindow";
+
+import { $modals, openModalAuth, openModalAlert, auth } from "../model";
 
 export const AuthLinks = () => {
-  const { isShowModalAuth } = useStore($modals);
+  const { isShowModalAuth, isShowModalAlert, modalContent } = useStore($modals);
   //state for signin and signup block
   const [signinData, setSigninData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({
@@ -13,12 +14,12 @@ export const AuthLinks = () => {
     confirmPassword: ""
   });
   const [techData, setTechData] = useState({
-    signin: false,
-    signedout: false
+    signin: false
   });
+
   //open signin modal
-  const openSigninWindow = obj => {
-    setTechData(obj); //set {signin:true} as true for signin and false for signup
+  const openSigninWindow = signinObj => {
+    setTechData(signinObj); //set {signin:true} as true for signin and false for signup
     openModalAuth(true);
   };
   //get current user status form firebase - null if signed out
@@ -29,24 +30,29 @@ export const AuthLinks = () => {
     if (toggle === "signup") {
       auth
         .createUserWithEmailAndPassword(signupData.email, signupData.password)
-        .then(cred => {
+        .then(() =>
           //authentificate with signed up state
-          auth.signInWithEmailAndPassword(
-            signupData.email,
-            signupData.password
-          );
-          alert("You successfully signed up and signed in!");
-          openModalAuth(false); //close modal
+          auth.signInWithEmailAndPassword(signupData.email, signupData.password)
+        )
+        .then(() => {
+          openModalAuth(false); //close Auth modal
+          alertModal("You successfully signed up and signed in!");
         })
-        .catch(err => alert(err.message));
+        .catch(err => {
+          openModalAuth(false);
+          alertModal(err.message).then(() => openModalAuth(true));
+        });
     } else {
       auth
         .signInWithEmailAndPassword(signinData.email, signinData.password)
-        .then(cred => {
+        .then(() => {
           setSigninData({ email: "", password: "" }); //clear signin state
-          openModalAuth(false);
+          openModalAuth(false); //Close modal
         })
-        .catch(err => alert(err.message));
+        .catch(err => {
+          openModalAuth(false);
+          alertModal(err.message).then(() => openModalAuth(true));
+        });
     }
   };
   //Validate fns
@@ -64,16 +70,25 @@ export const AuthLinks = () => {
   const handleSubmit = (e, condition) => {
     e.preventDefault();
     if (condition === "signin") {
-      checkObjForValue(signinData, "")
-        ? alert("Fill all fields please!")
-        : closeModalSendData("signin");
+      if (checkObjForValue(signinData, "")) {
+        openModalAuth(false);
+        alertModal("Fill all fields please!").then(() => openModalAuth(true));
+      } else {
+        closeModalSendData("signin");
+      }
     } else if (condition === "signup") {
       if (comparePasswords(signupData, "password", "confirmPassword")) {
-        checkObjForValue(signupData, "")
-          ? alert("Fill all fields please!")
-          : closeModalSendData("signup");
+        if (checkObjForValue(signupData, "")) {
+          openModalAuth(false);
+          alertModal("Fill all fields please!").then(() => openModalAuth(true));
+        } else {
+          closeModalSendData("signup");
+        }
       } else {
-        alert("Wrong password confirmation!");
+        openModalAuth(false);
+        alertModal("Wrong password confirmation!").then(() =>
+          openModalAuth(true)
+        );
         document.querySelector(".password").value = "";
         document.querySelector(".confirmPassword").value = "";
         document.querySelector(".password").focus();
@@ -83,76 +98,89 @@ export const AuthLinks = () => {
   //sign out
   const signout = () =>
     auth.signOut().then(() => {
-      alert("You have signed out!");
-      setTechData({ ...techData, signedout: true });
+      alertModal("You have signed out!");
+      setTechData({ ...techData, signin: false });
     });
 
   const { signin } = techData;
   return (
-    <div className="auth-containter">
+    <>
       <ModalWindow
-        showModal={isShowModalAuth}
-        closeModal={openModalAuth}
-        contentModal={
-          <form
-            className={signin ? "signin" : "signup"}
-            onSubmit={handleSubmit}
-          >
-            <input
-              onChange={e => handleInput(e)}
-              type="email"
-              className={signin ? "signin" : "signup"}
-              name="email"
-              placeholder="Email"
-              required
-            />
-            <input
-              onChange={e => handleInput(e)}
-              type="password"
-              className="password"
-              name="password"
-              placeholder={signin ? "Password" : "Create password"}
-              required
-            />
-            {signin ? null : (
-              <>
-                <input
-                  onChange={e => handleInput(e)}
-                  type="password"
-                  className="confirmPassword"
-                  name="confirmPassword"
-                  placeholder="Confirm password"
-                  required
-                />
-              </>
-            )}
-            <button
-              className={signin ? "signin" : "signup"}
-              href=""
-              onClick={
-                signin
-                  ? e => handleSubmit(e, "signin")
-                  : e => handleSubmit(e, "signup")
-              }
-            >
-              {signin ? "Sign in" : "Sign up"}
-            </button>
-          </form>
-        }
+        className="modalAlert"
+        closeBtn={false}
+        showModal={isShowModalAlert}
+        modalContent={modalContent}
+        closeModal={openModalAlert}
       />
-      <ul className="auth-btns">
-        {!user ? (
-          <>
-            <li onClick={() => openSigninWindow({ signin: true })}>Sign in</li>
-            <li onClick={() => openSigninWindow({ signin: false })}>Sign up</li>
-          </>
-        ) : (
-          <>
-            <li>{user && user.email}</li>
-            <li onClick={() => signout()}>Sign out</li>
-          </>
-        )}
-      </ul>
-    </div>
+      <div className="auth-containter">
+        <ModalWindow
+          showModal={isShowModalAuth}
+          closeModal={openModalAuth}
+          modalContent={
+            <form
+              className={signin ? "signin" : "signup"}
+              onSubmit={handleSubmit}
+            >
+              <input
+                onChange={e => handleInput(e)}
+                type="email"
+                className={signin ? "signin" : "signup"}
+                name="email"
+                placeholder="Email"
+                required
+              />
+              <input
+                onChange={e => handleInput(e)}
+                type="password"
+                className="password"
+                name="password"
+                placeholder={signin ? "Password" : "Create password"}
+                required
+              />
+              {signin ? null : (
+                <>
+                  <input
+                    onChange={e => handleInput(e)}
+                    type="password"
+                    className="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Confirm password"
+                    required
+                  />
+                </>
+              )}
+              <button
+                className={signin ? "signin" : "signup"}
+                href=""
+                onClick={
+                  signin
+                    ? e => handleSubmit(e, "signin")
+                    : e => handleSubmit(e, "signup")
+                }
+              >
+                {signin ? "Sign in" : "Sign up"}
+              </button>
+            </form>
+          }
+        />
+        <ul className="auth-btns">
+          {!user ? (
+            <>
+              <li onClick={() => openSigninWindow({ signin: true })}>
+                Sign in
+              </li>
+              <li onClick={() => openSigninWindow({ signin: false })}>
+                Sign up
+              </li>
+            </>
+          ) : (
+            <>
+              <li>{user && user.email}</li>
+              <li onClick={() => signout()}>Sign out</li>
+            </>
+          )}
+        </ul>
+      </div>
+    </>
   );
 };

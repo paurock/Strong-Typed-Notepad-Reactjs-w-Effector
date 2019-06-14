@@ -77,7 +77,7 @@ export const NoteList = ({ name }) => {
   );
 };
 NoteList.propTypes = {
-  notesAll: PropTypes.array.isRequired,
+  notesAll: PropTypes.array,
   filteredNotesByCategory: PropTypes.array,
   name: PropTypes.string.isRequired,
   updateNoteUnderEdition: PropTypes.func,

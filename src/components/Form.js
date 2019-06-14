@@ -8,7 +8,7 @@ import {
   addNote,
   $noteUnderEdition,
   getInputText,
-  openModalEmptyField,
+  openModalAlert,
   deleteNote,
   onCancel
 } from "../model";
@@ -40,7 +40,7 @@ export const AddNoteForm = ({ name }) => {
       });
     } else {
       //Alert to fill textarea if empty
-      openModalEmptyField(true);
+      openModalAlert(true);
     }
   };
 
@@ -55,12 +55,12 @@ export const AddNoteForm = ({ name }) => {
         />
         <ModalWindow
           showModal={showModalEmptyInput}
-          contentModal="Try to add something please!"
-          closeModal={openModalEmptyField}
+          modalContent="Try to add something please!"
+          closeModal={openModalAlert}
         />
         <ModalWindow
           showModal={loading}
-          contentModal="Please wait..."
+          modalContent="Please wait..."
           closeBtn={false}
         />
       </>
