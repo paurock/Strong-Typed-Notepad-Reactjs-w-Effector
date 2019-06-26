@@ -1,6 +1,13 @@
 import { createStore, createEvent, createEffect } from "effector";
-import firebase from "./configFB";
-import "firebase/auth";
+import firebase from "../configFB";
+import "firebase/auth"; 
+//set max of notes per page
+const NOTES_PER_PAGE = 4 
+
+export const increment = createEvent(); 
+const $counter = createStore(NOTES_PER_PAGE) // set store to max number of notes at a page
+//fn increments counter if mouse wheel up and decrements if down && stop dispaying notes if reach max noteNomber
+  .on(increment, (counter, e) => (e.deltaY< 0) ? counter + 1: (counter<NOTES_PER_PAGE) ? counter : counter-1)
 
 export const auth = firebase.auth();
 //DB
@@ -9,8 +16,9 @@ const db = firebase.firestore();
 const notes = () => [];
 
 const pushDocIntoArray = (arr, obj, noteNumber, id) =>
-  arr.push({ ...obj, noteNumber, id });
+  arr.push({ ...obj, noteNumber, id })
 
+//Set ref to docs in Firebase firestore
 const getDocRef = () => {
   const user = auth.currentUser; // return object if signedin and null if not
   return user
@@ -24,18 +32,49 @@ const getDocRef = () => {
         .collection("notes");
 };
 
-const getArrFromFirebase = initArr =>
-  getDocRef()
+//There are two fns for getting notes from DB with paginator
+const getQueryFromServer = (snapshot, initArr) => {
+  const counter = $counter.getState(); //counter get events from mousewheel -increment for up and decrement for down
+  //calculate first visible doc on the page
+  let firstVisible =
+     counter <= snapshot.docs.length  
+      ? snapshot.docs[snapshot.docs.length - counter]  
+      : snapshot.docs[0] && increment(-1) //decrement counter
+  return getDocRef()
     .orderBy("noteNumber", "asc")
+    .startAt(firstVisible) // start query from first visivble doc
+    .limit(NOTES_PER_PAGE)  
     .get()
     .then(snapshot =>
       snapshot.forEach(doc =>
-        pushDocIntoArray(initArr, doc.data(), doc.data().noteNumber, doc.id)
+        pushDocIntoArray(
+          initArr,
+          doc.data(),
+          doc.data().noteNumber,
+          doc.id
+        )
       )
-    )
+    )    };
+
+const getArrFromFirebase = initArr => {
+  return getDocRef()
+    .orderBy("noteNumber", "asc")
+    .get()
+    .then(snapshot => getQueryFromServer(snapshot, initArr))
     .then(() => initArr)
     .catch(err => console.log(err));
+};
 
+// Events
+export const getInputText = createEvent();
+export const updateNoteUnderEdition = createEvent();
+export const openModalAlert = createEvent();
+export const setModalAlertContent = createEvent();
+export const openModalAuth = createEvent();
+export const openModalLost = createEvent();
+export const editNote = createEvent();
+export const onCancel = createEvent();
+export const onRefresh = createEvent();
 //Effects for handeling server data
 export const addNote = createEffect("add note").use(obj =>
   getDocRef()
@@ -44,24 +83,17 @@ export const addNote = createEffect("add note").use(obj =>
     .catch(err => console.error("Error writing document", err))
 );
 export const getNotes = createEffect("get notes").use(() =>
-  getArrFromFirebase(notes()).then(res => (res ? res : []))
+  getArrFromFirebase(notes())
+    .then(res => (res ? res : []))
+    .catch(err => console.error("Error getting document", err))
 );
+
 export const deleteNote = createEffect("delete note").use(id =>
   getDocRef()
     .doc(id)
     .delete()
+    .catch(err => console.error("Error deleting document", err))
 );
-
-// Events
-export const getInputText = createEvent();
-export const updateNoteUnderEdition = createEvent();
-export const openModalAlert = createEvent();
-export const setModalAlertContent = createEvent();
-export const openModalAuth = createEvent();
-export const editNote = createEvent();
-export const onCancel = createEvent();
-export const onRefresh = createEvent();
-
 // Stores
 export const $biggerNoteNumber = createStore(0).on(
   getNotes.done,
@@ -105,6 +137,7 @@ export const $preloader = createStore({ loading: true })
 export const $modals = createStore({
   isShowModalAlert: false,
   isShowModalAuth: false,
+  isShowLostModal: false,
   modalContent: ""
 })
   .on(openModalAlert, (oldState, isShowModalAlert) => ({
@@ -115,16 +148,23 @@ export const $modals = createStore({
     ...oldState,
     modalContent
   }))
+  .on(openModalLost, (oldState, isShowLostModal) => ({
+    ...oldState,
+    isShowLostModal
+  }))
   .on(openModalAuth, (oldState, isShowModalAuth) => ({
     ...oldState,
     isShowModalAuth
-  }));
+  }));  
 
 //Watchers
-
 //getNotes.fail.watch(console.log);
 //getNotes.done.watch(console.log);
 addNote.done.watch(getNotes);
 deleteNote.done.watch(getNotes);
 onCancel.watch(getNotes);
-//$modals.watch(user);
+$counter.watch(getNotes)
+
+$modals.watch(console.log)
+
+

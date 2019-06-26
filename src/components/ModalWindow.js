@@ -1,6 +1,6 @@
 import React from "react";
 import ReactModal from "react-modal";
-import { openModalAlert, setModalAlertContent } from "../model";
+import { openModalAlert, setModalAlertContent } from "../model/model";
 import PropTypes from "prop-types";
 import "../stylesheets/modalWindow.css";
 
@@ -22,7 +22,7 @@ export const ModalWindow = ({
 }) => (
   <ReactModal isOpen={showModal} contentLabel="Alert" closeTimeoutMS={500}>
     <div className="modalWindow">
-      <div>{modalContent}</div>
+      <div className="modal-content">{modalContent}</div>
       {closeBtn && (
         <button className="closeModal" onClick={() => closeModal(false)}>
           Close

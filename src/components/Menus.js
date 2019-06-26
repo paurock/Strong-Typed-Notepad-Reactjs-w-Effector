@@ -3,9 +3,10 @@ import { NavLink } from "react-router-dom";
 import { AddNoteForm } from "./Form";
 import { NoteList } from "./NoteList";
 import { AuthLinks } from "./Auth";
+import { increment } from "../model/model";
 
 const PageTemplate = ({ children, history, location, name }) => (
-  <section className="main-container">
+  <section className="main-container" onWheel={(e) => increment(e)}>
     <AuthLinks />
     <h1 className="page-title">/{name}</h1>
     {children}

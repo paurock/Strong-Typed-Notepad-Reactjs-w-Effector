@@ -11,10 +11,11 @@ import {
   openModalAlert,
   deleteNote,
   onCancel
-} from "../model";
+} from "../model/model";
 import PropTypes from "prop-types";
+import { Ddmmyyyy } from "./Ddmmyyyy";
 import { ModalWindow } from "./ModalWindow";
-import { auth } from "../model";
+import { auth } from "../model/model";
 
 // Form component Parent //
 
@@ -24,8 +25,8 @@ export const AddNoteForm = ({ name }) => {
   const biggerNoteNumber = useStore($biggerNoteNumber);
   const { loading } = useStore($preloader);
   const { noteUnderEdit, noteUnderEditId } = useStore($noteUnderEdition);
-  const { showModalEmptyInput } = useStore($modals);
-
+  const { isShowModalAlert } = useStore($modals);
+  console.log(isShowModalAlert);
   //submit a note
   const handleSubmit = e => {
     e.preventDefault();
@@ -36,7 +37,8 @@ export const AddNoteForm = ({ name }) => {
       addNote({
         note: input,
         category: name,
-        noteNumber: biggerNoteNumber === -Infinity ? 0 : biggerNoteNumber + 1
+        noteNumber: biggerNoteNumber === -Infinity ? 0 : biggerNoteNumber + 1,
+        timestamp: Ddmmyyyy()
       });
     } else {
       //Alert to fill textarea if empty
@@ -51,10 +53,9 @@ export const AddNoteForm = ({ name }) => {
           input={input}
           noteUnderEdit={noteUnderEdit}
           handleSubmit={e => handleSubmit(e)}
-          //handleChange={e => handleChange(e)}
         />
         <ModalWindow
-          showModal={showModalEmptyInput}
+          showModal={isShowModalAlert}
           modalContent="Try to add something please!"
           closeModal={openModalAlert}
         />

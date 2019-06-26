@@ -3,7 +3,53 @@ const readLS = () => localStorage.getItem("effector-notes"); //Fn that read data
 const writeLS = newItem =>
   localStorage.setItem("effector-notes", JSON.stringify(newItem)); //Fn that write your object in LS
 const notesLS = readLS();
-const initialState = data => (data !== null ? data : "[]"); */
+const initialState = data => (data !== null ? data : "[]"); 
+
+//sessionStorage.clear();
+const writeSS = (key, newItem) =>
+  sessionStorage.setItem(key, JSON.stringify(newItem));
+
+const readSS = key => JSON.parse(sessionStorage.getItem(key));
+*/
+const stopGetNotes = createEffect("stop to get notes", {
+  handler(x) {console.log("filtered", x)}
+  })
+ 
+forward({
+  from: $counter.updates.filter({
+    fn: x => x<=notesPerPage
+  }), 
+  to: stopGetNotes, 
+})
+
+
+const getArrFromFirebase = initArr =>
+  getDocRef()
+    .orderBy("noteNumber", "asc")
+    .get()
+    .then(snapshot =>
+      snapshot.forEach(doc =>
+        pushDocIntoArray(initArr, doc.data(), doc.data().noteNumber, doc.id)
+      )
+    )
+    .then(() => initArr)
+    .catch(err => console.log(err));
+
+auth
+  .sendPasswordResetEmail()
+  .then(() => {
+    // Email sent.
+  })
+  .catch(error => {
+    // An error happened.
+  });
+
+document.querySelector("span.forgot-password").style = "display:none";
+document.querySelector(".email").value = "Your e-mail here";
+document.querySelector(".password").style = "display:none;";
+document.querySelector("button.signin").innerHTML = "Reset password";
+document.querySelector("button.signin").style =
+  "margin-bottom:10px; width:100px";
 
 import * as firebase from "firebase";
 

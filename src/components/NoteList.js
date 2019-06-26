@@ -9,11 +9,10 @@ import {
   editNote,
   getNotes,
   onRefresh
-} from "../model";
-import { Ddmmyyyy } from "./Ddmmyyyy";
+} from "../model/model";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../stylesheets/transitionGroup.css";
-import { auth } from "../model";
+import { auth } from "../model/model";
 
 // Note list Component
 export const NoteList = ({ name }) => {
@@ -47,9 +46,7 @@ export const NoteList = ({ name }) => {
           {filteredNotesByCategory.map(item => (
             <CSSTransition key={item.id} timeout={500} classNames="item">
               <div className="note" key={v4()}>
-                <span className="timestamp">
-                  <Ddmmyyyy />
-                </span>
+                <time className="timestamp">{item.timestamp}</time>
                 <span
                   className="close"
                   key={v4()}

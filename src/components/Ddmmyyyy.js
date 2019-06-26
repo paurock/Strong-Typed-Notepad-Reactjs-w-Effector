@@ -2,8 +2,8 @@ const nowDate = () => new Date();
 const hms = nowDate => [
   { day: nowDate.getDate() },
   { month: nowDate.getMonth() + 1 },
-  { hours: nowDate.getHours()},
-  { minutes: nowDate.getMinutes()}
+  { hours: nowDate.getHours() },
+  { minutes: nowDate.getMinutes() }
 ];
 
 const addZero = arr =>
@@ -13,7 +13,7 @@ const addZero = arr =>
   });
 const hhmmyyyy = arr => {
   const year = nowDate().getFullYear();
-  return `Time: ${arr[2]}:${arr[3]} Date: ${arr[0]}.${arr[1]}.${year}`;
+  return `Date: ${arr[0]}.${arr[1]}.${year} Time: ${arr[2]}:${arr[3]}`;
 };
 
 const compose = fns => val => fns.reduce((fn1, fn2) => fn2(fn1), val);

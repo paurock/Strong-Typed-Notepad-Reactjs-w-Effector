@@ -1,11 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useStore } from "effector-react";
 import { ModalWindow, alertModal } from "./ModalWindow";
 
-import { $modals, openModalAuth, openModalAlert, auth } from "../model";
+import {
+  $modals,
+  openModalAuth,
+  openModalAlert,
+  openModalLost,
+  auth
+} from "../model/model";
 
+const ResetPasswordModal = () => {
+  const [resetPasswordData, setResetPasswordData] = useState({ email: "" });
+  const resetPasswordRequest = () => {
+    auth
+      .sendPasswordResetEmail(resetPasswordData.email)
+      .then(() => {
+        openModalLost(false);
+        alertModal("Password sent").then(() => openModalAuth(true));
+      })
+      .catch(err => {
+        openModalLost(false);
+        alertModal(err.message).then(() => openModalLost(true));
+      });
+  };
+  return (
+    <div className="reset-password">
+      <input
+        onChange={e => setResetPasswordData({ email: e.target.value })}
+        type="email2GetPassword"
+        name="email2GetPassword"
+        placeholder="Email"
+      />
+      <button onClick={() => resetPasswordRequest()}>Reset Password</button>
+    </div>
+  );
+};
 export const AuthLinks = () => {
-  const { isShowModalAuth, isShowModalAlert, modalContent } = useStore($modals);
+  const {
+    isShowModalAuth,
+    isShowModalAlert,
+    isShowLostModal,
+    modalContent
+  } = useStore($modals);
   //state for signin and signup block
   const [signinData, setSigninData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({
@@ -16,6 +53,18 @@ export const AuthLinks = () => {
   const [techData, setTechData] = useState({
     signin: false
   });
+
+  const inputEmail = useRef();
+  const inputPassword = useRef();
+  const inputPasswordConfirmation = useRef();
+
+  //useRef to fill inputs field
+  const setUpInputsValues = () => {
+    inputEmail.current.value = signinData.email;
+    inputPassword.current.value = signinData.password;
+    inputEmail.current.value = signupData.email;
+    inputPassword.current.value = signupData.password;
+  };
 
   //open signin modal
   const openSigninWindow = signinObj => {
@@ -72,7 +121,10 @@ export const AuthLinks = () => {
     if (condition === "signin") {
       if (checkObjForValue(signinData, "")) {
         openModalAuth(false);
-        alertModal("Fill all fields please!").then(() => openModalAuth(true));
+        alertModal("Fill all fields please!").then(() => {
+          openModalAuth(true);
+          setUpInputsValues();
+        });
       } else {
         closeModalSendData("signin");
       }
@@ -80,18 +132,20 @@ export const AuthLinks = () => {
       if (comparePasswords(signupData, "password", "confirmPassword")) {
         if (checkObjForValue(signupData, "")) {
           openModalAuth(false);
-          alertModal("Fill all fields please!").then(() => openModalAuth(true));
+          alertModal("Fill all fields please!").then(() => {
+            openModalAuth(true);
+            setUpInputsValues();
+          });
         } else {
           closeModalSendData("signup");
         }
       } else {
         openModalAuth(false);
-        alertModal("Wrong password confirmation!").then(() =>
-          openModalAuth(true)
-        );
-        document.querySelector(".password").value = "";
-        document.querySelector(".confirmPassword").value = "";
-        document.querySelector(".password").focus();
+        alertModal("Wrong password confirmation!").then(() => {
+          openModalAuth(true);
+          setUpInputsValues();
+          inputPasswordConfirmation.current.focus();
+        });
       }
     }
   };
@@ -101,6 +155,12 @@ export const AuthLinks = () => {
       alertModal("You have signed out!");
       setTechData({ ...techData, signin: false });
     });
+
+  const resetPassword = () => {
+    openModalAuth(false);
+    openModalLost(true);
+    setTechData({ signin: true });
+  };
 
   const { signin } = techData;
   return (
@@ -123,14 +183,16 @@ export const AuthLinks = () => {
             >
               <input
                 onChange={e => handleInput(e)}
+                ref={inputEmail}
                 type="email"
-                className={signin ? "signin" : "signup"}
+                className="email"
                 name="email"
                 placeholder="Email"
                 required
               />
               <input
                 onChange={e => handleInput(e)}
+                ref={inputPassword}
                 type="password"
                 className="password"
                 name="password"
@@ -141,6 +203,7 @@ export const AuthLinks = () => {
                 <>
                   <input
                     onChange={e => handleInput(e)}
+                    ref={inputPasswordConfirmation}
                     type="password"
                     className="confirmPassword"
                     name="confirmPassword"
@@ -160,6 +223,14 @@ export const AuthLinks = () => {
               >
                 {signin ? "Sign in" : "Sign up"}
               </button>
+              {signin && (
+                <span
+                  className="forgot-password"
+                  onClick={() => resetPassword()}
+                >
+                  Forgot password?
+                </span>
+              )}
             </form>
           }
         />
@@ -181,6 +252,12 @@ export const AuthLinks = () => {
           )}
         </ul>
       </div>
+      <ModalWindow
+        className="modal-lost-password"
+        showModal={isShowLostModal}
+        modalContent={<ResetPasswordModal />}
+        closeModal={openModalLost}
+      />
     </>
   );
 };

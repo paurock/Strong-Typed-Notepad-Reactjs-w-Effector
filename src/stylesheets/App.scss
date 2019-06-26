@@ -1,7 +1,33 @@
-$max-width-main: 310px;
+$max-width-main: 305px;
+
+ 
+@media screen and (min-width: 322px) and (max-width: 375px)  {
+$max-width-main: 355px;
+.main-container {		 
+	max-width: $max-width-main!important;		 
+	}
+form {
+	max-width: $max-width-main!important;
+}
+span.back-button {	 
+width: $max-width-main!important;
+} 
+#react-container {
+max-width: $max-width-main!important;
+}
+textarea {
+	width:348px!important;
+max-width: $max-width-main!important;	 
+}
+.menu button {		 
+width:$max-width-main!important;
+max-width: $max-width-main!important;	 
+}
+.ReactModal__Content--after-open {max-width:$max-width-main!important;}
+}
 
 #react-container {
-  max-width: 500px;
+  max-width: $max-width-main
 }
 h1 ,
 h2,
@@ -88,19 +114,31 @@ form.signin, form.signup {
 	flex-direction:column;
 }
 form.signin button.signin, form.signup button.signup { 
-	margin: 0 auto;
+	margin: 5px auto 10px auto;
 	text-decoration: none;
-	color: dodgerblue;
-	cursor: pointer;
-	background: none;
-	font-weight: 600; 
+	cursor: pointer; 
+	font-weight: 600;
+	height: 50px;
+}
+form.signin, form.signup span.forgot-password {	 
+	text-align: center;
+	font-size: 13px;
+	color: coral;		 
 }
 
+.modal-content .reset-password {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: -10px 
+}
+.modal-content .reset-password button { text-align: center; height:40px; width:100px; margin:0px 0 10px 5px;}
+
+.ReactModal__Content--after-open {max-width:$max-width-main}
 input {
 	border-radius: 5px;
 	border:1px solid lightgray;
 	max-width:130px;
-	margin: 0 0 5px 5px;
+	margin: 0 0 10px 5px;
 	padding:10px;
 }
 input .signin {
@@ -116,7 +154,7 @@ button {
 	max-width: 250px;
 	width: 100px;
 	height:50px;	
-	margin: 2vh 0 0 0;
+	margin: 5px 0 0 0;
 	border-radius:10px;
 	border:none;
 	background-color: #1890ff;
@@ -131,7 +169,7 @@ button {
 
 textarea {
 	max-width: $max-width-main;
-	width:302px;
+	width:298px;
 	font-size:20px;
 	padding:5px 0 0 5px;
 	color:rgb(150, 150, 150);

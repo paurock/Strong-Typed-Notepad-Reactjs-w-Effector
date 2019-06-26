@@ -13,7 +13,7 @@
   justify-content: space-around;
   align-items: center;
   border: 1px solid gray;
-  max-width: 302px;
+  max-width: 100%;
 }
 .modalWindow button {
   font-size: 0.8rem;
